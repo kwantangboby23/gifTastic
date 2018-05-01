@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose Avengers character</title>
+
+<body>
+    <span id="button-added">
+
+        <button data-character="hulk">Hulk</button>
+        <button data-character="spiderman">Spider Man</button>
+        <button data-character="captainamerica">Captain America</button>
+
+    </span>
+
+
+    <form id="marvel-form">
+        <lable for="marvel-input">Choose Your Marvel Character</lable>
+
+        <input type="text" id="char-input">
+        <br>
+
+        <input id="select-marvel" type="submit" value="Search"></input>
+    </form>
+    <div id="gifs-appear-here">
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        $("button").on("click", search)
+
+
+
+        function search() {
+            $("#gifs-appear-here").empty();
+
+            var character = $(this).attr("data-character");
+
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + character + "&api_key=rmIVKxbkZtK2eLdxTvKjZnQmzHFAXG7M&limit=10";
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+
+                .then(function (response) {
+                    var results = response.data;
+
+                    console.log(response);
+                    console.log(queryURL);
+
+
+                    for (var i = 0; i < results.length; i++) {
+
+
+                        var characterDiv = $("<div>");
+
+
+
+                        var p = $("<p>").text("Rating: " + results[i].rating);
+
+                        var characterImage = $("<img>");
+
+                        characterImage.attr("src", results[i].images.fixed_height_still.url);
+
+                        characterImage.attr({
+
+                            "data-still": results[i].images.fixed_height_still.url,
+                            "data-animate": results[i].images.fixed_height.url,
+                            "data-state": "still",
+                            class: "gif"
+
+                        });
+
+                        characterDiv.append(p);
+                        characterDiv.append(characterImage);
+
+                        $("#gifs-appear-here").prepend(characterDiv);
+                    }
+                    // Click gif files to change data-state
+                    $(".gif").on("click", function () {
+                        console.log("1234");
+
+                        var state = $(this).attr("data-state");
+                        if (state == "still") {
+                            $(this).attr("src", $(this).attr("data-animate"));
+                            $(this).attr("data-state", "animate");
+                        } else {
+                            $(this).attr("src", $(this).attr("data-still"));
+                            $(this).attr("data-state", "still");
+                        }
+                    });
+
+
+
+                });
+
+
+        };
+
+        // Event for user clicking the character-choose button
+
+        $("#select-marvel").on("click", function (event) {
+            // Preventing the button from trying to submit the form
+            event.preventDefault();
+            // Storing marvel's character name
+            var character = $("#char-input").val().trim();
+
+
+
+            searchCharacter(character);
+
+        });
+
+
+        function searchCharacter(character) {
+
+
+            // Empty previous results
+            $("#gifs-appear-here").empty();
+
+
+
+
+
+            var button = $("<button>");
+            button.attr("data-character", character);
+            button.text(character);
+
+            $("#button-added").append(button);
+
+
+
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + character + "&api_key=rmIVKxbkZtK2eLdxTvKjZnQmzHFAXG7M&limit=10";
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+                .then(function (response) {
+                    console.log(response);
+                    var results = response.data;
+
+                    for (var i = 0; i < results.length; i++) {
+
+
+                        var characterDiv = $("<div>");
+
+                        var p = $("<p>").text("Rating: " + results[i].rating);
+
+
+
+                        var characterImage = $("<img>");
+
+                        characterImage.attr("src", results[i].images.fixed_height_still.url);
+
+
+
+
+
+                        characterDiv.append(p);
+                        characterDiv.append(characterImage);
+
+
+                        $("#gifs-appear-here").prepend(characterDiv);
+
+
+                    }
+                });
+        }
+
+        
+
+
+
+
+
+
+        //var results = response.data;
+
+                    //var characterName = $("<h1>").text(response.name);
+
+                    //var characterURL = $("<a>").attr("href", response.url).append(characterName);
+
+                    //var characterImage = $("<img>").attr("src", results[i].thumb_url);
+
+                    //var characterRating = $("<p>").text("Rating: " + response[i].rating);
+
+
+
+
+
+    </script>
+</body>
+
+</html>
