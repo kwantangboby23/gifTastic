@@ -5,9 +5,12 @@
 </head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="CSS/style.css">
 <title>Choose Avengers character</title>
 
 <body>
+    <h1 id="head">Choose Marvel Characters</h1>
+
     <span id="button-added">
 
         <button data-character="hulk">Hulk</button>
@@ -18,16 +21,19 @@
 
 
     <form id="marvel-form">
-        <lable for="marvel-input">Choose Your Marvel Character</lable>
-
+        <lable id="label" for="marvel-input">
+            Choose Your Marvel Character</lable>
+    </form>       
+        
         <input type="text" id="char-input">
         <br>
-
         <input id="select-marvel" type="submit" value="Search"></input>
-    </form>
-    <div id="gifs-appear-here">
+    
+        <div id="gifs-appear-here">
 
     </div>
+
+    <!-- JQuery, Javascript link-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
 
@@ -159,7 +165,14 @@
                         characterImage.attr("src", results[i].images.fixed_height_still.url);
 
 
+                        characterImage.attr({
 
+                            "data-still": results[i].images.fixed_height_still.url,
+                            "data-animate": results[i].images.fixed_height.url,
+                            "data-state": "still",
+                            class: "gif"
+
+                        });
 
 
                         characterDiv.append(p);
@@ -169,26 +182,30 @@
                         $("#gifs-appear-here").prepend(characterDiv);
 
 
+
+
                     }
+                    $(".gif").on("click", function () {
+                        console.log("1234");
+
+                        var state = $(this).attr("data-state");
+                        if (state == "still") {
+                            $(this).attr("src", $(this).attr("data-animate"));
+                            $(this).attr("data-state", "animate");
+                        } else {
+                            $(this).attr("src", $(this).attr("data-still"));
+                            $(this).attr("data-state", "still");
+                        }
+                    });
                 });
         }
 
-        
 
 
 
 
 
 
-        //var results = response.data;
-
-                    //var characterName = $("<h1>").text(response.name);
-
-                    //var characterURL = $("<a>").attr("href", response.url).append(characterName);
-
-                    //var characterImage = $("<img>").attr("src", results[i].thumb_url);
-
-                    //var characterRating = $("<p>").text("Rating: " + response[i].rating);
 
 
 
